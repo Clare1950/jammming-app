@@ -4,17 +4,16 @@ import Playlist from "../Playlist/Playlist";
 import SearchBar from "../SearchBar/SearchBar";
 import Spotify from "../../util/Spotify";
 import "./App.css";
+
+Spotify.getAccessToken();
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchResults: [
-        ,
-      ],
-      playlistName: "Party-songs",
-      playlistTracks: [
-        ,
-      ],
+      searchResults: [],
+      playlistName: "New Playlist",
+      playlistTracks: [],
     };
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
@@ -44,6 +43,9 @@ class App extends React.Component {
 
   savePlaylist() {
     const trackUris = this.state.playlistTracks.map((track) => track.uri);
+    Spotify.savePlaylist(this.state.playlistName, trackUris);
+    this.setState({ playlistTracks: [] });
+    this.updatePlaylistName("New Playlist");
   }
 
   search(term) {
@@ -66,7 +68,7 @@ class App extends React.Component {
               onAdd={this.addTrack}
             />
             <Playlist
-              playlistName={this.state.playlistName}
+              name={this.state.playlistName}
               playlistTracks={this.state.playlistTracks}
               onRemove={this.removeTrack}
               onNameChange={this.updatePlaylistName}
